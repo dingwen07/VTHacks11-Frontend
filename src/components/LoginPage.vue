@@ -1,12 +1,18 @@
 <script setup>
-import {useCookies} from 'vue3-cookies'
+ import {useCookies} from 'vue3-cookies'
 
-let $cookies = useCookies().cookies
+ let $cookies = useCookies().cookies
+
+ const props = defineProps({
+     theme: String
+ })
+
 </script>
 
 <template>
   <lay-card shadow="always" class="center-element layui-anim layui-anim-scale">
-    <h2>Welcome to <span>Chatroom</span>!</h2>
+      <lay-icon @click="$emit('themeToggled')" :class="props.theme === 'light' ? 'layui-icon-moon' : 'layui-icon-light'"></lay-icon>
+      <h2>Welcome to <span>Chatroom</span>!</h2>
     <br />
     <h3>Please specify your name here:</h3>
     <br/>
