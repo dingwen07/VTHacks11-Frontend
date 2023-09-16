@@ -60,7 +60,7 @@ function toggleCollapse() {
       </template>
     </lay-menu-item>
     <div class="float_bottom">
-      <lay-menu-item id="theme" @click="$emit('themeToggled')">
+      <lay-menu-item @click="$emit('themeToggled')">
         <template #icon>
           <lay-icon :class="props.theme === 'light' ? 'layui-icon-light' : 'layui-icon-moon'"></lay-icon>
         </template>
