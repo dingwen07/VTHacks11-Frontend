@@ -32,13 +32,13 @@ const props = defineProps({
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 25vh;
+    height: 30vh;
     width: var(--width);
     /* Offset the content */
     /* Convert the vh to vw*/
     --width: 50vh;
     margin-left: calc((100vw - var(--width)) * 0.5);
-    margin-top: 37.5vh;
+    margin-top: 35vh;
     /* Make the border */
     border: 1px solid #e6e6e6;
     background: white;
