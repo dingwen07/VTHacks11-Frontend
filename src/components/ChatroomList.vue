@@ -2,7 +2,9 @@
 import {layer} from "@layui/layui-vue";
 import axios from 'axios'
 
-let chatrooms = ref()
+let chatrooms = ref([
+  { "name": "hello", "id": 1 }
+])
 axios.get('http://127.0.0.1:5678/api/v1/chatroom').then(function (response) {
   console.log(response.data.data.chatroom)
   chatrooms.value = response.data.data.chatroom
@@ -55,7 +57,16 @@ function toggleCollapse(){
           {{ chatroom.name }}
         </template>
       </lay-menu-item>
-      <lay-menu-item id="collapse" v-if="!collapse" @click="toggleCollapse()" class="float_bottom">
+      <div class="float_bottom">
+      <lay-menu-item id="theme" @click="$emit('themeToggled')">
+	<template #icon>
+          <lay-icon class="layui-icon-moon"></lay-icon>
+        </template>
+        <template #title>
+          Theme
+        </template>
+      </lay-menu-item>
+      <lay-menu-item id="collapse" v-if="!collapse" @click="toggleCollapse()">
         <template #icon>
           <lay-icon class="layui-icon-prev"></lay-icon>
         </template>
@@ -63,7 +74,7 @@ function toggleCollapse(){
           Collapse
         </template>
       </lay-menu-item>
-      <lay-menu-item id="expand" v-else @click="toggleCollapse()"  class="float_bottom">
+      <lay-menu-item id="expand" v-else @click="toggleCollapse()">
         <template #icon>
           <lay-icon class="layui-icon-next"></lay-icon>
         </template>
@@ -71,6 +82,7 @@ function toggleCollapse(){
           Expand
         </template>
       </lay-menu-item>
+      </div>
     </lay-menu>
 <!--  <lay-button @click="openLeftDrawer" type="primary"><lay-icon class="layui-icon-group"/></lay-button>-->
 

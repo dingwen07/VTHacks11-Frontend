@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue'
+import {ref, onMounted} from 'vue'
 import { useCookies } from 'vue3-cookies'
 import ChatroomList from "@/components/ChatroomList.vue";
 import LoginPage from "@/components/LoginPage.vue";
@@ -19,13 +19,14 @@ if (user_id.value) {
   )
 }
 
-
+const userTheme = ref("light")
 </script>
 
 <template>
+  <lay-config-provider :theme="userTheme">
     <LoginPage v-if="!user_id"/>
-    <ChatroomList v-else />
-
+    <ChatroomList @theme-toggled="() => userTheme = userTheme === 'light' ? 'dark' : 'light'" v-else />
+  </lay-config-provider>
 </template>
 
 <style scoped>
