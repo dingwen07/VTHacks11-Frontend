@@ -20,7 +20,6 @@ const props = defineProps({
     <lay-input placeholder="Your name" v-model="name" :allow-clear="true"/>
     <br/>
     <br/>
-    <br/>
     <lay-button type="primary" @click="join">Join</lay-button>
   </lay-card>
 </template>
