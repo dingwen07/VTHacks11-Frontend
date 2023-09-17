@@ -6,7 +6,7 @@ This project shows the front-end section of the Chatroom, a [VTHacks11 project](
 ![GitHub repo size](https://img.shields.io/github/repo-size/dingwen07/VTHacks11-FrontEnd?color=orange)
 ![GitHub last commit](https://img.shields.io/github/last-commit/dingwen07/VTHacks11-FrontEnd?color=green)
 ![GitHub Language](https://img.shields.io/github/languages/top/dingwen07/VTHacks11-FrontEnd?color=red)
-![GitHub License](https://img.shields.io/github/license/dingwen07/VTHacks11-FrontEnd?color=gray)
+![GitHub License](https://img.shields.io/github/license/dingwen07/VTHacks11-FrontEnd)
 
 ---
 
