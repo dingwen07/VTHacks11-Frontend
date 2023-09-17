@@ -5,28 +5,17 @@ import axios from 'axios'
 let $cookies = useCookies().cookies
 
 let chatrooms = ref([])
-axios.get('http://127.0.0.1:8080/user/'+ $cookies.get("user_id") +'/chatroom').then(function (response) {
-  console.log(response.data.data.chatroom)
+axios.get('http://127.0.0.1:8080/user/' + $cookies.get("user_id") + '/chatroom').then(function (response) {
   chatrooms.value = response.data.data.chatroom
-  console.log(chatrooms.value)
 })
 
 const props = defineProps({
   theme: String
 })
 
-
-const openLeftDrawer = function () {
-  layer.drawer({
-    title: "",
-    content: "",
-    area: ['80%', '100%'],
-    offset: "l"
-  })
-}
-
-import {ref} from 'vue'
+import {h, ref, resolveComponent} from 'vue'
 import {useCookies} from "vue3-cookies";
+import JoinOrCreateChatroom from "@/components/JoinOrCreateChatroom.vue";
 
 const selectedKey = ref("1");
 const changeSelectedKey = (val) => {
@@ -38,13 +27,22 @@ function toggleCollapse() {
   collapse.value = !collapse.value
 }
 
+const create_or_join = () => {
+  layer.open({
+    type: "page",
+    title: "Create/Join the Chat",
+    content: h(JoinOrCreateChatroom, {user_id: $cookies.get("user_id")}),
+  })
+}
+
+
 
 </script>
 
 <template>
   <lay-menu id="menu" :selected-key="selectedKey" @change-selected-Key="changeSelectedKey" :tree="true"
             :collapse="collapse" theme="light">
-    <lay-menu-item id="join">
+    <lay-menu-item id="join" @click="create_or_join()">
       <template #icon>
         <lay-icon class="layui-icon-addition"></lay-icon>
       </template>
@@ -52,7 +50,7 @@ function toggleCollapse() {
         Create/Join the Chat
       </template>
     </lay-menu-item>
-    <lay-menu-item v-for="chatroom in chatrooms" :key="chatroom.id">
+    <lay-menu-item v-for="chatroom in chatrooms" :key="chatroom.id" @click="$emit('enterRoom', chatroom.id)">
       <template #icon>
         <lay-icon class="layui-icon-group"></lay-icon>
       </template>
@@ -87,8 +85,6 @@ function toggleCollapse() {
       </lay-menu-item>
     </div>
   </lay-menu>
-  <!--  <lay-button @click="openLeftDrawer" type="primary"><lay-icon class="layui-icon-group"/></lay-button>-->
-
 </template>
 
 <style scoped>

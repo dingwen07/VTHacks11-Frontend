@@ -1,7 +1,6 @@
 <script setup>
 import {useCookies} from 'vue3-cookies'
 import {layer} from "@layui/layui-vue";
-import axios from "axios";
 import {ref} from "vue";
 
 let $cookies = useCookies().cookies
@@ -12,21 +11,30 @@ const props = defineProps({
 
 const name = ref('')
 
-function join() {
+async function join() {
   if (name.value === "") {
     layer.msg("Please specify your name!")
   } else {
-    axios.post("http://127.0.0.1:8080/user", {
-      "name": name.value
-    }).then(function (response) {
-      if (response.data.status === 0) {
-        $cookies.set("user_id", response.data.data.userId)
-        $cookies.set("user_name", name.value)
-        window.location.reload()
-      } else {
-        layer.msg("Cannot create the user!")
-      }
-    })
+    let res = await fetch(
+        'http://127.0.0.1:8080/user',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            "name": name.value
+          }),
+          sameSite: 'none'
+        }
+    ).then(res => res.json())
+
+    if (res.status === 0 || res.status === 200) {
+      $cookies.set("user_id", res.data.userId, 60 * 60 * 24 * 7)
+      window.location.reload()
+    } else {
+      layer.msg("Cannot create the user!")
+    }
   }
 }
 
@@ -44,7 +52,7 @@ function join() {
     <lay-input placeholder="Your name" v-model="name" :allow-clear="true"/>
     <br/>
     <br/>
-    <lay-button type="primary" @click="join">Join</lay-button>
+    <lay-button type="primary" fluid @click="join">Join</lay-button>
   </lay-card>
 </template>
 
