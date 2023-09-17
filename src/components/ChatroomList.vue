@@ -5,7 +5,7 @@ import axios from 'axios'
 let $cookies = useCookies().cookies
 
 let chatrooms = ref([])
-axios.get('http://127.0.0.1:8080/user/' + $cookies.get("user_id") + '/chatroom').then(function (response) {
+axios.get('http://172.29.146.39:8080/user/' + $cookies.get("user_id") + '/chatroom').then(function (response) {
   chatrooms.value = response.data.data.chatroom
 })
 

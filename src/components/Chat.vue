@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from "vue";
+import {ref, onUpdated, onMounted} from "vue";
 import axios from "axios";
 import {layer} from "@layui/layui-vue";
 
@@ -11,21 +11,30 @@ const props = defineProps({
 })
 
 const chatroom_name = ref("")
-const chatroom_member_count = ref(0)
-if (props.chatroom_id === null) {
-  layer.msg("Please select a chatroom!")
-} else {
-axios.get("http://127.0.0.1:8080/chatroom/" + props.chatroom_id + "?user_id=" + props.user_id).then(function (response) {
-  if (response.data.status === 0 || response.data.status === 200) {
-    loading.value = false
-    chatroom_name.value = response.data.data.name
-    chatroom_member_count.value = response.data.data.memberCount
-    console.log(response)
-  } else {
-    layer.msg("Cannot find the chatroom!")
-  }
-})
-}
+ const chatroom_member_count = ref(0)
+
+ function updateInfo() {
+     axios.get("http://172.29.146.39:8080/chatroom/" + props.chatroom_id + "?user_id=" + props.user_id).then(function (response) {
+	 if (response.data.status === 0 || response.data.status === 200) {
+	     loading.value = false
+	     chatroom_name.value = response.data.data.name
+	     chatroom_member_count.value = response.data.data.memberCount
+	     console.log(chatroom_name)
+	 } else {
+	     layer.msg("Cannot find the chatroom!")
+	 }
+     })     
+
+ }
+
+ onUpdated(() => {
+     updateInfo()
+ })
+
+ onMounted(() => {
+     updateInfo()
+ })
+
 </script>
 
 <template>

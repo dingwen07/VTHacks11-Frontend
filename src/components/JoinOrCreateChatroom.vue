@@ -13,10 +13,10 @@ function joinOrCreate() {
   if (code.value === "") {
     layer.msg("Please enter the code of the chatroom you want to join or create!")
   } else {
-    axios.post("http://127.0.0.1:8080/chatroom/" + code.value, {
-      "user_id": props.user_id,
-      "room_name": "Chatroom"
-    }).then(function (response) {
+      axios.post("http://172.29.146.39:8080/chatroom/" + code.value, {
+	  "user_id": props.user_id,
+	  "room_name": "Chatroom"
+      }).then(function (response) {
       if (response.data.status === 0 || response.data.status === 200) {
         window.location.reload()
       } else {

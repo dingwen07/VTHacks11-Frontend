@@ -16,10 +16,10 @@ async function join() {
     layer.msg("Please specify your name!")
   } else {
     let res = await fetch(
-        'http://127.0.0.1:8080/user',
+        'http://172.29.146.39:8080/user',
         {
-          method: 'POST',
-          headers: {
+            method: 'POST',
+            headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({

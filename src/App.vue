@@ -11,8 +11,8 @@ let $cookies = useCookies().cookies
 let user_id = ref($cookies.isKey("user_id"))
 let user_name = ref(null)
 if (user_id.value) {
-  axios.get("http://127.0.0.1:8080/user/" + $cookies.get("user_id")).then(function (response) {
-        if (response.data.status !== 0 && response.data.status !== 200) {
+     axios.get("http://172.29.146.39:8080/user/" + $cookies.get("user_id")).then(function (response) {
+         if (response.data.status !== 0 && response.data.status !== 200) {
           user_id.value = false
           console.log("Cannot find the user!")
           $cookies.remove('user_id')
@@ -23,10 +23,10 @@ if (user_id.value) {
   )
 }
 
-const chatrooms = ref([])
-axios.get('http://127.0.0.1:8080/user/' + $cookies.get("user_id") + '/chatroom').then(function (response) {
-  chatrooms.value = response.data.data.chatroom
-})
+ const chatrooms = ref([])
+ axios.get('http://172.29.146.39:8080/user/' + $cookies.get("user_id") + '/chatroom').then(function (response) {
+     chatrooms.value = response.data.data.chatroom
+ })
 
 const chat_room_id = ref(null)
 
@@ -40,9 +40,9 @@ const userTheme = ref("light")
       <ChatroomList @enter-room="(room_id) => chat_room_id = room_id"
                     @theme-toggled="userTheme = userTheme === 'light' ? 'dark' : 'light'" :theme="userTheme"/>
       {{console.log(chat_room_id)}}
-      <Chat @theme-toggled="userTheme = userTheme === 'light' ? 'dark' : 'light'" :theme="userTheme" v-for="chatroom in chatrooms"
-            :user_id="$cookies.get('user_id')" v-if="chatroom !== undefined && chatroom.id === chat_room_id"/>
-      <lay-body fluid v-if="chatrooms.length === 0">
+      <Chat @theme-toggled="userTheme = userTheme === 'light' ? 'dark' : 'light'" :theme="userTheme"
+            :user_id="$cookies.get('user_id')" :chatroom_id="chat_room_id" v-if="chat_room_id != null"/>
+      <lay-body fluid v-if="chat_room_id === null">
         <EmptyPage @theme-toggled="userTheme = userTheme === 'light' ? 'dark' : 'light'" :theme="userTheme"
                    :user_id="$cookies.get('user_id')" :user_name="user_name"/>
       </lay-body>
