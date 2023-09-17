@@ -39,7 +39,6 @@ const userTheme = ref("light")
     <lay-layout v-if="user_id">
       <ChatroomList @enter-room="(room_id) => chat_room_id = room_id"
                     @theme-toggled="userTheme = userTheme === 'light' ? 'dark' : 'light'" :theme="userTheme"/>
-      {{console.log(chat_room_id)}}
       <Chat @theme-toggled="userTheme = userTheme === 'light' ? 'dark' : 'light'" :theme="userTheme"
             :user_id="$cookies.get('user_id')" :chatroom_id="chat_room_id" v-if="chat_room_id != null"/>
       <lay-body fluid v-if="chat_room_id === null">
