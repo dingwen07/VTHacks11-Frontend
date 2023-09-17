@@ -13,21 +13,15 @@ const props = defineProps({
 const chatroom_name = ref("")
  const chatroom_member_count = ref(0)
  const input_text = ref("")
- const msg_id = ref(null)
- const old_msg_id = ref(null)
+ const msg_id = ref({})
+ const old_msg_id = ref({})
  const msgs = ref([])
 
  function receiveMessage() {
-  axios.get("http://172.29.146.39:8080/chatroom/" + props.chatroom_id + "/chat" + "?offset=" + 10 + "&message_id=" + old_msg_id.value).then(function (response) {
+  axios.get("http://172.29.146.39:8080/chatroom/" + props.chatroom_id + "/chat" + "?offset=" + 100 + "&message_id=" + old_msg_id.value[props.chatroom_id]).then(function (response) {
       if (response.data.status === 0 || response.data.status === 200) {
 	  let message = response.data.data.message
-	  for (let new_msg of message) {
-	      if (new_msg.id != old_msg_id.value) {
-		  msgs.value.push(new_msg)
-	      }
-	      msg_id.value += 1
-	  }
-	  old_msg_id.value = message[message.length - 1].id
+	  msgs.value = message
       } else {
 	  layer.msg("Cannot find the chatroom!")
     }
@@ -55,11 +49,16 @@ function updateInfo() {
   axios.get("http://172.29.146.39:8080/chatroom/" + props.chatroom_id + "?user_id=" + props.user_id).then(function (response) {
     if (response.data.status === 0 || response.data.status === 200) {
       loading.value = false
-      chatroom_name.value = response.data.data.name
+      chatroom_name.value = props.chatroom_id
 	chatroom_member_count.value = response.data.data.memberCount
-	msg_id.value = response.data.data.lastMessageId
-	old_msg_id.value = msg_id.value
-      console.log(chatroom_name)
+	msg_id.value[props.chatroom_id] = response.data.data.lastMessageId
+	if (!old_msg_id.value.hasOwnProperty(props.chatroom_id)) {
+	    old_msg_id.value[props.chatroom_id] = response.data.data.lastMessageId	    
+	} else {
+	    console.log(old_msg_id.value[props.chatroom_id])
+	}
+	msgs.value = []
+	receiveMessage()
     } else {
       layer.msg("Cannot find the chatroom!")
     }
@@ -111,5 +110,9 @@ onMounted(() => {
   line-height: 7vh;
   background-color: white;
   color: black;
-}
+ }
+
+ .layui-field {
+     border-color: black;
+ }
 </style>
