@@ -11,29 +11,47 @@ const props = defineProps({
 })
 
 const chatroom_name = ref("")
- const chatroom_member_count = ref(0)
+const chatroom_member_count = ref(0)
 
- function updateInfo() {
-     axios.get("http://172.29.146.39:8080/chatroom/" + props.chatroom_id + "?user_id=" + props.user_id).then(function (response) {
-	 if (response.data.status === 0 || response.data.status === 200) {
-	     loading.value = false
-	     chatroom_name.value = response.data.data.name
-	     chatroom_member_count.value = response.data.data.memberCount
-	     console.log(chatroom_name)
-	 } else {
-	     layer.msg("Cannot find the chatroom!")
-	 }
-     })     
+function sendMessage() {
+  let message_text_box = document.getElementById("message_text_box")
+  if (message_text_box.value === "") {
+    layer.msg("Please enter your message!")
+  } else {
+    axios.post("http://172.29.146.39:8080/chatroom/" + props.chatroom_id + "/chat", {
+      "user_id": props.user_id,
+      "message": message_text_box.value
+    }).then(function (response) {
+      if (response.data.status === 0 || response.data.status === 200) {
+        message_text_box.value = ""
+      } else {
+        layer.msg("Cannot send the message!")
+      }
+    })
+  }
+}
 
- }
+function updateInfo() {
+  axios.get("http://172.29.146.39:8080/chatroom/" + props.chatroom_id + "?user_id=" + props.user_id).then(function (response) {
+    if (response.data.status === 0 || response.data.status === 200) {
+      loading.value = false
+      chatroom_name.value = response.data.data.name
+      chatroom_member_count.value = response.data.data.memberCount
+      console.log(chatroom_name)
+    } else {
+      layer.msg("Cannot find the chatroom!")
+    }
+  })
 
- onUpdated(() => {
-     updateInfo()
- })
+}
 
- onMounted(() => {
-     updateInfo()
- })
+onUpdated(() => {
+  updateInfo()
+})
+
+onMounted(() => {
+  updateInfo()
+})
 
 </script>
 
@@ -47,8 +65,8 @@ const chatroom_name = ref("")
       </lay-skeleton>
     </lay-scroll>
     <lay-row class="layui-anim-up">
-      <lay-input fluid style="height: 7vh; width: 80%" placeholder="Enter Your Text Here..."/>
-      <lay-button type="primary" @click="loading = !loading" fluid style="height: 7vh; width: 20%">
+      <lay-input fluid style="height: 7vh; width: 80%" placeholder="Enter Your Text Here..." id="message_text_box"/>
+      <lay-button type="primary" @click="sendMessage" fluid style="height: 7vh; width: 20%">
         Send
       </lay-button>
     </lay-row>
