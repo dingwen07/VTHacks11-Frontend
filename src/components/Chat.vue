@@ -11,19 +11,39 @@ const props = defineProps({
 })
 
 const chatroom_name = ref("")
-const chatroom_member_count = ref(0)
+ const chatroom_member_count = ref(0)
+ const input_text = ref("")
+ const msg_id = ref(null)
+ const old_msg_id = ref(null)
+ const msgs = ref([])
 
-function sendMessage() {
-  let message_text_box = document.getElementById("message_text_box")
-  if (message_text_box.value === "") {
+ function receiveMessage() {
+  axios.get("http://172.29.146.39:8080/chatroom/" + props.chatroom_id + "/chat" + "?offset=" + 10 + "&message_id=" + old_msg_id.value).then(function (response) {
+      if (response.data.status === 0 || response.data.status === 200) {
+	  let message = response.data.data.message
+	  for (let new_msg of message) {
+	      if (new_msg.id != old_msg_id.value) {
+		  msgs.value.push(new_msg)
+	      }
+	      msg_id.value += 1
+	  }
+	  old_msg_id.value = message[message.length - 1].id
+      } else {
+	  layer.msg("Cannot find the chatroom!")
+    }
+  })     
+ }
+
+ function sendMessage() {
+  if (input_text.value === "") {
     layer.msg("Please enter your message!")
   } else {
     axios.post("http://172.29.146.39:8080/chatroom/" + props.chatroom_id + "/chat", {
       "user_id": props.user_id,
-      "message": message_text_box.value
+      "message": input_text.value
     }).then(function (response) {
-      if (response.data.status === 0 || response.data.status === 200) {
-        message_text_box.value = ""
+	if (response.data.status === 0 || response.data.status === 200) {
+        input_text.value = ""
       } else {
         layer.msg("Cannot send the message!")
       }
@@ -36,7 +56,9 @@ function updateInfo() {
     if (response.data.status === 0 || response.data.status === 200) {
       loading.value = false
       chatroom_name.value = response.data.data.name
-      chatroom_member_count.value = response.data.data.memberCount
+	chatroom_member_count.value = response.data.data.memberCount
+	msg_id.value = response.data.data.lastMessageId
+	old_msg_id.value = msg_id.value
       console.log(chatroom_name)
     } else {
       layer.msg("Cannot find the chatroom!")
@@ -50,7 +72,10 @@ onUpdated(() => {
 })
 
 onMounted(() => {
-  updateInfo()
+     updateInfo()
+     window.setInterval(() => {
+	 receiveMessage()
+     }, 500)
 })
 
 </script>
@@ -62,10 +87,13 @@ onMounted(() => {
     </lay-header>
     <lay-scroll thumbColor="#666" style="height: 86vh" class="layui-anim-up">
       <lay-skeleton :rows="30" :loading="loading" animated>
+	  <lay-field v-for="message in msgs" :key="message.id" :title="message.senderName">
+	      {{ message.payload }}
+	  </lay-field>
       </lay-skeleton>
     </lay-scroll>
     <lay-row class="layui-anim-up">
-      <lay-input fluid style="height: 7vh; width: 80%" placeholder="Enter Your Text Here..." id="message_text_box"/>
+      <lay-input fluid style="height: 7vh; width: 80%" placeholder="Enter Your Text Here..." v-model="input_text" />
       <lay-button type="primary" @click="sendMessage" fluid style="height: 7vh; width: 20%">
         Send
       </lay-button>
