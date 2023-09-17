@@ -1,11 +1,35 @@
 <script setup>
 import {useCookies} from 'vue3-cookies'
+import {layer} from "@layui/layui-vue";
+import axios from "axios";
+import {ref} from "vue";
 
 let $cookies = useCookies().cookies
 
 const props = defineProps({
   theme: String
 })
+
+const name = ref('')
+
+function join() {
+  if (name.value === "") {
+    layer.msg("Please specify your name!")
+  } else {
+    axios.post("http://127.0.0.1:8080/user", {
+      "name": name.value
+    }).then(function (response) {
+      if (response.data.status === 0) {
+        $cookies.set("user_id", response.data.data.userId)
+        $cookies.set("user_name", name.value)
+        window.location.reload()
+      } else {
+        layer.msg("Cannot create the user!")
+      }
+    })
+  }
+}
+
 
 </script>
 

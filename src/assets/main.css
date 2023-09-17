@@ -9,3 +9,8 @@ body {
     width: 100vw;
     height: 100vh;
 }
+
+.float_bottom {
+    position: absolute;
+    bottom: 0;
+}

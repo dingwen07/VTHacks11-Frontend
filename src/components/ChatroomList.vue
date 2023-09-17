@@ -2,10 +2,10 @@
 import {layer} from "@layui/layui-vue";
 import axios from 'axios'
 
-let chatrooms = ref([
-  {"name": "hello", "id": 1}
-])
-axios.get('http://127.0.0.1:5678/api/v1/chatroom').then(function (response) {
+let $cookies = useCookies().cookies
+
+let chatrooms = ref([])
+axios.get('http://127.0.0.1:8080/user/'+ $cookies.get("user_id") +'/chatroom').then(function (response) {
   console.log(response.data.data.chatroom)
   chatrooms.value = response.data.data.chatroom
   console.log(chatrooms.value)
@@ -26,6 +26,7 @@ const openLeftDrawer = function () {
 }
 
 import {ref} from 'vue'
+import {useCookies} from "vue3-cookies";
 
 const selectedKey = ref("1");
 const changeSelectedKey = (val) => {
@@ -94,11 +95,6 @@ function toggleCollapse() {
 #menu {
   height: 100vh;
   position: relative;
-}
-
-.float_bottom {
-  position: absolute;
-  bottom: 0;
 }
 
 body {

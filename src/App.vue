@@ -4,12 +4,13 @@ import {useCookies} from 'vue3-cookies'
 import ChatroomList from "@/components/ChatroomList.vue";
 import LoginPage from "@/components/LoginPage.vue";
 import axios from "axios";
+import Chat from "@/components/Chat.vue";
 
 let $cookies = useCookies().cookies
 let user_id = ref($cookies.isKey("user_id"))
 
 if (user_id.value) {
-  axios.get("http://127.0.0.1:5678/api/v1/user/").then(function (response) {
+  axios.get("http://127.0.0.1:8080/user/" + $cookies.get("user_id")).then(function (response) {
         if (response.data.status !== 0) {
           user_id.value = false
           console.log("Cannot find the user!")
@@ -25,9 +26,16 @@ const userTheme = ref("light")
 
 <template>
   <lay-config-provider :theme="userTheme">
-    <LoginPage @theme-toggled="userTheme = userTheme === 'light' ? 'dark' : 'light'" v-if="!user_id"
-               :theme="userTheme"/>
-    <ChatroomList @theme-toggled="userTheme = userTheme === 'light' ? 'dark' : 'light'" v-else :theme="userTheme"/>
+    <lay-layout v-if="user_id">
+        <ChatroomList @theme-toggled="userTheme = userTheme === 'light' ? 'dark' : 'light'" :theme="userTheme" />
+        <lay-body style="width: 100%">
+          <Chat @theme-toggled="userTheme = userTheme === 'light' ? 'dark' : 'light'" :theme="userTheme"/>
+        </lay-body>
+
+    </lay-layout>
+
+      <LoginPage @theme-toggled="userTheme = userTheme === 'light' ? 'dark' : 'light'" v-else
+                 :theme="userTheme"/>
   </lay-config-provider>
 </template>
 
