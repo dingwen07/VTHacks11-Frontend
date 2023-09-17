@@ -1,0 +1,16 @@
+{
+    "name": "Chatroom",
+    "short_name": "Chatroom",
+    "start_url": "/web/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "description": "A simple chatroom app.",
+    "icons": [
+      {
+        "src": "favicon.ico",
+        "sizes": "64x64",
+        "type": "image/x-icon"
+      }
+    ]
+}
