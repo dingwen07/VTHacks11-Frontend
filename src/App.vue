@@ -1,36 +1,38 @@
 <script setup>
-import {ref, onMounted} from 'vue'
-import {useCookies} from 'vue3-cookies'
-import ChatroomList from "@/components/ChatroomList.vue"
-import LoginPage from "@/components/LoginPage.vue"
-import axios from "axios"
-import Chat from "@/components/Chat.vue"
-import EmptyPage from "@/components/EmptyPage.vue"
+ import {ref, onMounted} from 'vue'
+ import {useCookies} from 'vue3-cookies'
+ import ChatroomList from "@/components/ChatroomList.vue"
+ import LoginPage from "@/components/LoginPage.vue"
+ import axios from "axios"
+ import Chat from "@/components/Chat.vue"
+ import EmptyPage from "@/components/EmptyPage.vue"
 
-let $cookies = useCookies().cookies
-let user_id = ref($cookies.isKey("user_id"))
-let user_name = ref(null)
-if (user_id.value) {
-     axios.get("http://172.29.146.39:8080/user/" + $cookies.get("user_id")).then(function (response) {
+ const root = "http://172.29.114.14:8080"
+
+ let $cookies = useCookies().cookies
+ let user_id = ref($cookies.isKey("user_id"))
+ let user_name = ref(null)
+ if (user_id.value) {
+     axios.get(root + "/user/" + $cookies.get("user_id")).then(function (response) {
          if (response.data.status !== 0 && response.data.status !== 200) {
-          user_id.value = false
-          console.log("Cannot find the user!")
-          $cookies.remove('user_id')
-        } else {
-          user_name.value = response.data.data.name
-        }
-      }
-  )
-}
+             user_id.value = false
+             console.log("Cannot find the user!")
+             $cookies.remove('user_id')
+         } else {
+             user_name.value = response.data.data.name
+         }
+     }
+     )
+ }
 
  const chatrooms = ref([])
- axios.get('http://172.29.146.39:8080/user/' + $cookies.get("user_id") + '/chatroom').then(function (response) {
+ axios.get(root + '/user/' + $cookies.get("user_id") + '/chatroom').then(function (response) {
      chatrooms.value = response.data.data.chatroom
  })
 
-const chat_room_id = ref(null)
+ const chat_room_id = ref(null)
 
-const userTheme = ref("light")
+ const userTheme = ref("light")
 
 </script>
 

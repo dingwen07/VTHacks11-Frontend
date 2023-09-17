@@ -3,11 +3,12 @@ import {useCookies} from 'vue3-cookies'
 import {layer} from "@layui/layui-vue";
 import {ref} from "vue";
 
-let $cookies = useCookies().cookies
+ let $cookies = useCookies().cookies
+ const root = "http://172.29.114.14:8080"
 
-const props = defineProps({
-  theme: String
-})
+ const props = defineProps({
+     theme: String
+ })
 
 const name = ref('')
 
@@ -16,7 +17,7 @@ async function join() {
     layer.msg("Please specify your name!")
   } else {
     let res = await fetch(
-        'http://172.29.146.39:8080/user',
+        root + '/user',
         {
             method: 'POST',
             headers: {
@@ -49,7 +50,7 @@ async function join() {
     <br/>
     <h3>Please specify your name here:</h3>
     <br/>
-    <lay-input placeholder="Your name" v-model="name" :allow-clear="true"/>
+    <lay-input v-on:keyup.enter="join" placeholder="Your name" v-model="name" :allow-clear="true"/>
     <br/>
     <br/>
     <lay-button type="primary" fluid @click="join">Join</lay-button>

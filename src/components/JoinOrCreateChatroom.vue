@@ -4,16 +4,18 @@ import axios from "axios";
 import {layer} from "@layui/layui-vue";
 
 const props = defineProps({
-  user_id: String
-})
+     user_id: String
+ })
 
-const code = ref("")
+ const root = "http://172.29.114.14:8080"
 
-function joinOrCreate() {
+ const code = ref("")
+
+ function joinOrCreate() {
   if (code.value === "") {
     layer.msg("Please enter the code of the chatroom you want to join or create!")
   } else {
-      axios.post("http://172.29.146.39:8080/chatroom/" + code.value, {
+      axios.post(root + "/chatroom/" + code.value, {
 	  "user_id": props.user_id,
 	  "room_name": "Chatroom"
       }).then(function (response) {
@@ -29,14 +31,20 @@ function joinOrCreate() {
 </script>
 
 <template>
-  <h3>Please enter the code of the chatroom you want to join or create:</h3>
-  <br/>
-  <lay-input placeholder="Code" v-model="code" :allow-clear="true"/>
-  <br/>
-  <br/>
-  <lay-button type="primary" fluid @click="joinOrCreate">Join/Create</lay-button>
+    <lay-container>
+	<div class="popup-container">
+	    <h3>Please enter the code of the chatroom you want to join or create:</h3>
+	    <br/>
+	    <lay-input v-on:keyup.enter="joinOrCreate" placeholder="Code" v-model="code" :allow-clear="true"/>
+	    <br/>
+	    <br/>
+	    <lay-button type="primary" fluid @click="joinOrCreate">Join/Create</lay-button>
+	</div>
+    </lay-container>
 </template>
 
 <style scoped>
-
+ .popup-container {
+     margin-bottom: 1em
+ }
 </style>

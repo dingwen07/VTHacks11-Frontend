@@ -1,17 +1,37 @@
 <script setup>
 import {layer} from "@layui/layui-vue";
-import axios from 'axios'
+ import axios from 'axios'
+ import {onUpdated, onMounted} from "vue"
 
-let $cookies = useCookies().cookies
+ let $cookies = useCookies().cookies
+ const root = "http://172.29.114.14:8080"
 
-let chatrooms = ref([])
-axios.get('http://172.29.146.39:8080/user/' + $cookies.get("user_id") + '/chatroom').then(function (response) {
-  chatrooms.value = response.data.data.chatroom
-})
+ let chatrooms = ref([])
 
-const props = defineProps({
-  theme: String
-})
+ function getChatRooms() {
+     axios.get(root + '/user/' + $cookies.get("user_id") + '/chatroom').then(function (response) {
+	 if (response.data.status === 0 || response.data.status === 200) {
+	     chatrooms.value = response.data.data.chatroom
+	 } else {
+	     let $cookies = useCookies().cookies
+	     $cookies.remove('user_id')
+	     window.location.reload()
+	 }
+     })     
+
+ }
+ 
+ onUpdated(() => {
+     getChatRooms()
+ })
+
+ onMounted(() => {
+     getChatRooms()
+ })
+
+ const props = defineProps({
+	 theme: String
+     })
 
 import {h, ref, resolveComponent} from 'vue'
 import {useCookies} from "vue3-cookies";
@@ -55,7 +75,7 @@ const create_or_join = () => {
         <lay-icon class="layui-icon-group"></lay-icon>
       </template>
       <template #title>
-        {{ chatroom.name }}
+        {{ chatroom.id }}
       </template>
     </lay-menu-item>
     <div class="float_bottom">
