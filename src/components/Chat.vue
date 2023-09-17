@@ -4,7 +4,7 @@ import axios from "axios";
 import {layer} from "@layui/layui-vue";
 
 const loading = ref(true);
- const root = "http://172.29.114.14:8080"
+ const root = "/api/v1"
 
  const props = defineProps({
      user_id: String,

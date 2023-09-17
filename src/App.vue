@@ -7,7 +7,7 @@
  import Chat from "@/components/Chat.vue"
  import EmptyPage from "@/components/EmptyPage.vue"
 
- const root = "http://172.29.114.14:8080"
+ const root = "/api/v1"
 
  let $cookies = useCookies().cookies
  let user_id = ref($cookies.isKey("user_id"))

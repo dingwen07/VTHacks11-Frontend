@@ -7,7 +7,7 @@ const props = defineProps({
      user_id: String
  })
 
- const root = "http://172.29.114.14:8080"
+ const root = "/api/v1"
 
  const code = ref("")
 

@@ -4,7 +4,7 @@ import {layer} from "@layui/layui-vue";
  import {onUpdated, onMounted} from "vue"
 
  let $cookies = useCookies().cookies
- const root = "http://172.29.114.14:8080"
+ const root = "/api/v1"
 
  let chatrooms = ref([])
 
